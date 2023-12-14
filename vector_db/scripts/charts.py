@@ -14,27 +14,24 @@ class Charts():
         self.df = pd.read_csv(path)
 
     def all_years(self, save_path: Path = Path('./dist'), start_year: int = 1993, union_year: int = 2011, end_year: int = 2023):
-        labels = []
-        values = []
+        tab20b_cm = [plt.colormaps['tab20b'](v)
+                     for v in np.linspace(0.05263158, 0.89473684, 8)]
+        tab20c_cm = [plt.colormaps['tab20c'](v)
+                     for v in np.linspace(0.05263158, 0.47368421, 5)]
+        outer_colors = tab20b_cm + tab20c_cm
+        labels_pie = []
+        values_pie = []
         sum_union_year = self.df[self.df._year <= union_year]._year.count()
-        labels.append(f'{start_year}-{union_year}')
-        values.append(sum_union_year)
+        labels_pie.append(f'{start_year}-{union_year}')
+        values_pie.append(sum_union_year)
         for i in range(union_year + 1, end_year + 1):
             sum_year = self.df[self.df._year == i]._year.count()
-            labels.append(str(i))
-            values.append(sum_year)
-        index = 'Year'
-        y_offset = np.zeros(1)
+            labels_pie.append(str(i))
+            values_pie.append(sum_year)
+        plt.clf()
         _, ax = plt.subplots()
-        cmap = plt.colormaps['tab20']
-        outer_colors = cmap(np.arange(13))
-        for row in range(len(values)):
-            ax.bar(index, values[row], label=labels[row], width=0.7,
-                   bottom=y_offset, color=outer_colors[row])
-            y_offset = y_offset + values[row]
-        ax.legend(loc="upper right")
-        ax.spines[['top', 'right']].set_visible(False)
-        ax.set_xlim(-2, 2)
+        ax.pie(values_pie, labels=labels_pie, wedgeprops={
+               'linewidth': 1, "edgecolor": 'white'}, colors=outer_colors)
         plt.savefig(save_path / 'articles_in_every_year.png')
 
     def articles_by_months(self, save_path: Path = Path('./dist')):
