@@ -11,13 +11,14 @@ class Charts():
     def __init__(self, path: Union[str, Path]) -> None:
         self.month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May',
                            'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        self.dpi = 600
         self.df = pd.read_csv(path)
 
     def all_years(self, save_path: Path = Path('./dist'), start_year: int = 1993, union_year: int = 2011, end_year: int = 2023):
         tab20b_cm = [plt.colormaps['tab20b'](v)
-                     for v in np.linspace(0.05263158, 0.89473684, 8)]
+                     for v in np.linspace(0.05, 0.9, 8)]
         tab20c_cm = [plt.colormaps['tab20c'](v)
-                     for v in np.linspace(0.05263158, 0.47368421, 5)]
+                     for v in np.linspace(0.05, 0.45, 5)]
         outer_colors = tab20b_cm + tab20c_cm
         labels_pie = []
         values_pie = []
@@ -31,8 +32,9 @@ class Charts():
         plt.clf()
         _, ax = plt.subplots()
         ax.pie(values_pie, labels=labels_pie, wedgeprops={
-               'linewidth': 1, "edgecolor": 'white'}, colors=outer_colors)
-        plt.savefig(save_path / 'articles_in_every_year.png')
+               'linewidth': 0.5, "edgecolor": 'white'}, colors=outer_colors)
+        plt.savefig(save_path / 'articles_in_every_year.pdf', dpi=self.dpi)
+        plt.close()
 
     def articles_by_months(self, save_path: Path = Path('./dist')):
         current_month = []
@@ -49,7 +51,8 @@ class Charts():
         ax.spines[['top', 'right']].set_visible(False)
         ax.grid(axis='both', linestyle='--', linewidth=0.5, color='0.7')
         ax.set_axisbelow(True)
-        plt.savefig(save_path / 'number_of_articles_by_month.png')
+        plt.savefig(save_path / 'number_of_articles_by_month.pdf', dpi=self.dpi)
+        plt.close()
 
     def articles_in_years(self, start_year: int = 1993, end_year: int = 2023, save_path: Path = Path('./dist')):
         labels_plot = []
@@ -68,7 +71,8 @@ class Charts():
         ax.xaxis.set_tick_params(rotation=45, labelsize=8)
         ax.spines[['top', 'right']].set_visible(False)
         ax.grid(axis='both', linestyle='--', linewidth=0.5, color='0.7')
-        plt.savefig(save_path / 'number_of_articles_in_years.png')
+        plt.savefig(save_path / 'number_of_articles_in_years.pdf', dpi=self.dpi)
+        plt.close()
 
 
 def get_args():
