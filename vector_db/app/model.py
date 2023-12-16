@@ -18,11 +18,10 @@ def get_device():
 
     return device
 
+
 class Model:
     def __init__(self, model_name: str = 'all-MiniLM-L6-v2') -> None:
         self.model = SentenceTransformer(model_name, device=get_device())
 
     def embedding(self, sentence: str):
         return self.model.encode(sentence)
-
-
